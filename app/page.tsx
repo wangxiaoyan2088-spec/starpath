@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <main className="landing">
       <div className="landing-wrap">
-        {sections.map((s, i) => (
+        {sections.map((s) => (
           <Link
             key={s.key}
             href={`/login?from=${s.key}`}
