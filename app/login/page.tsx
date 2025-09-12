@@ -12,57 +12,31 @@ export default function LoginPage() {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !pwd) { alert('请填写姓名和密码'); return; }
-    // TODO: 这里将来换成真实鉴权（Supabase / 自建后端）
-    if (role === 'student') router.push('/student');
-    else router.push('/teacher');
+    if (!name || !pwd) { alert('请填写姓名与密码'); return; }
+    // 先做演示跳转；后续换成真实鉴权
+    router.push(role === 'student' ? '/student' : '/teacher');
   };
 
   return (
-    <main className="container" style={{maxWidth: 520}}>
-      <div className="card" style={{marginTop: 24}}>
+    <main className="container" style={{maxWidth:520}}>
+      <div className="card" style={{marginTop:24}}>
         <h2>登录</h2>
         <p className="muted">来源：{from}</p>
 
         <div className="tabs">
-          <button
-            className={`tab ${role==='student' ? 'active' : ''}`}
-            onClick={()=>setRole('student')}
-            type="button"
-          >学生</button>
-          <button
-            className={`tab ${role==='teacher' ? 'active' : ''}`}
-            onClick={()=>setRole('teacher')}
-            type="button"
-          >老师</button>
+          <button type="button" className={`tab ${role==='student'?'active':''}`} onClick={()=>setRole('student')}>学生</button>
+          <button type="button" className={`tab ${role==='teacher'?'active':''}`} onClick={()=>setRole('teacher')}>老师</button>
         </div>
 
-        <form onSubmit={submit} className="form">
+        <form className="form" onSubmit={submit}>
           <label>姓名
-            <input
-              className="input"
-              placeholder={role==='student'?'请输入学生姓名':'请输入老师姓名'}
-              value={name}
-              onChange={e=>setName(e.target.value)}
-            />
+            <input className="input" value={name} onChange={e=>setName(e.target.value)} placeholder="请输入姓名" />
           </label>
-
           <label>登录密码
-            <input
-              className="input"
-              type="password"
-              placeholder="请输入密码"
-              value={pwd}
-              onChange={e=>setPwd(e.target.value)}
-            />
+            <input className="input" type="password" value={pwd} onChange={e=>setPwd(e.target.value)} placeholder="请输入密码" />
           </label>
-
           <button className="btn" type="submit" style={{width:'100%'}}>进入{role==='student'?'学生':'老师'}页面</button>
         </form>
-
-        <p className="muted" style={{marginTop:12}}>
-          还没有账号？可先使用演示密码：<code>demo123</code>（仅前端示例）
-        </p>
       </div>
     </main>
   );
