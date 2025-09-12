@@ -1,29 +1,24 @@
-import Link from 'next/link';
-
-type Section = { key:string; title:string; idx:string; row:1|2 };
-
-const sections: Section[] = [
-  { key:'xingtu',  title:'星途英才', idx:'01', row:1 },
-  { key:'benke',   title:'本科',     idx:'02', row:2 },
-  { key:'shuoshi', title:'硕士',     idx:'03', row:1 },
-  { key:'boshi',   title:'博士',     idx:'04', row:2 },
-  { key:'kecheng', title:'课程',     idx:'05', row:1 },
-  { key:'daoshi',  title:'导师',     idx:'06', row:2 },
-];
+import React from "react";
+import "./globals.css";
 
 export default function Home() {
+  const sections = [
+    { title: "星途英才", href: "/login?type=starpath", num: "01" },
+    { title: "本科", href: "/login?type=undergraduate", num: "02" },
+    { title: "硕士", href: "/login?type=master", num: "03" },
+    { title: "博士", href: "/login?type=phd", num: "04" },
+    { title: "课程", href: "/login?type=course", num: "05" },
+    { title: "导师", href: "/login?type=mentor", num: "06" },
+  ];
+
   return (
     <main className="landing">
       <div className="landing-wrap">
-        {sections.map((s) => (
-          <Link
-            key={s.key}
-            href={`/login?from=${s.key}`}
-            className={`bubble ${s.row===1 ? 'row1' : 'row2'}`}
-          >
-            <span className="bubble-title">{s.title}</span>
-            <span className="bubble-index">{s.idx}</span>
-          </Link>
+        {sections.map((s, i) => (
+          <a key={i} href={s.href} className="bubble">
+            <strong>{s.title}</strong>
+            <span className="num">{s.num}</span>
+          </a>
         ))}
       </div>
     </main>
