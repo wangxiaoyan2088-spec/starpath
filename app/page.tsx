@@ -1,17 +1,31 @@
-export default function Home(){
+import Link from 'next/link';
+
+type Section = { key:string; title:string; idx:string; row:1|2 };
+
+const sections: Section[] = [
+  { key:'xingtu',  title:'星途英才', idx:'01', row:1 },
+  { key:'benke',   title:'本科',     idx:'02', row:2 },
+  { key:'shuoshi', title:'硕士',     idx:'03', row:1 },
+  { key:'boshi',   title:'博士',     idx:'04', row:2 },
+  { key:'kecheng', title:'课程',     idx:'05', row:1 },
+  { key:'daoshi',  title:'导师',     idx:'06', row:2 },
+];
+
+export default function Home() {
   return (
-    <main className="container">
-      <div className="grid grid-2">
-        <div className="card">
-          <h2>动态网站 · 必须具备</h2>
-          <ul>
-            <li>登录与角色（学生/老师/主管）</li>
-            <li>数据库（学生画像、应用、任务、文书、匹配结果）</li>
-            <li>实时图表：散点图（分数 vs QS）、进度条、环形图</li>
-            <li>API：选校匹配、任务更新、文书</li>
-          </ul>
-        </div>
+    <main className="landing">
+      <div className="landing-wrap">
+        {sections.map((s, i) => (
+          <Link
+            key={s.key}
+            href={`/login?from=${s.key}`}
+            className={`bubble ${s.row===1 ? 'row1' : 'row2'}`}
+          >
+            <span className="bubble-title">{s.title}</span>
+            <span className="bubble-index">{s.idx}</span>
+          </Link>
+        ))}
       </div>
     </main>
-  )
+  );
 }
