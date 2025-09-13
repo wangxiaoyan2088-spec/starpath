@@ -1,59 +1,189 @@
-/* 全局样式 */
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  background: #0f172a;
-  color: white;
+/* ===== 全局基础 ===== */
+:root{
+  --ink:#eef1ff; --muted:#aeb6da;
+  --bg-top:#0f1430; --bg-bot:#0c1026;
+  --stroke:rgba(255,255,255,.18);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; color:var(--ink);
+  font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Microsoft YaHei",sans-serif;
+  background:
+    radial-gradient(1100px 520px at 12% -8%, rgba(160,140,255,.16), transparent 40%),
+    radial-gradient(980px 480px at 88% 0%,   rgba(120,160,255,.14), transparent 45%),
+    linear-gradient(180deg, var(--bg-top), var(--bg-bot));
+  overflow-x:hidden;
 }
 
-/* 首页背景 */
-.landing{
-  min-height:100vh;
-  display:grid; place-items:center;
-  padding:40px 16px;
-  background: radial-gradient(1200px 400px at 35% 75%, rgba(50,120,255,.25), transparent 70%),
-              radial-gradient(800px 300px at 75% 78%, rgba(90,180,255,.18), transparent 60%),
-              #0c1120;
+/* ===== 星空：星尘 + 两层星点 + 云气漂移 ===== */
+.fx, .fx::before, .fx::after { position:fixed; inset:0; pointer-events:none; content:""; z-index:0; }
+
+/* 细腻彩色噪点（星尘） */
+.fx{
+  mix-blend-mode:overlay; opacity:.24;
+  background:
+    repeating-linear-gradient(0deg,  rgba(255,255,255,.05) 0 2px, rgba(0,0,0,.04) 2px 4px),
+    repeating-linear-gradient(90deg, rgba(200,160,255,.04) 0 3px, rgba(0,0,0,.035) 3px 6px);
+  animation:grain 10s steps(12) infinite;
+}
+@keyframes grain{
+  0%{transform:translate(0,0)} 25%{transform:translate(-14px,9px)}
+  50%{transform:translate(12px,-16px)} 75%{transform:translate(-8px,12px)}
+  100%{transform:translate(0,0)}
 }
 
-/* 容器：三列两行 */
-.landing-wrap{
-  width:min(1200px,92vw);
-  display:grid; grid-template-columns:repeat(3,1fr);
-  gap:28px 32px; position:relative;
+/* 第一层星点：缓慢闪烁 */
+.fx::before{
+  opacity:.85;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(225,235,255,.95) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 22% 36%, rgba(195,215,255,.9)  0 1.8px, transparent 2.8px),
+    radial-gradient(circle at 38% 12%, rgba(235,215,255,.95) 0 1.6px, transparent 2.6px),
+    radial-gradient(circle at 55% 22%, rgba(190,220,255,.95) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 66% 8%,  rgba(225,195,255,.9)  0 1.8px, transparent 2.8px),
+    radial-gradient(circle at 72% 35%, rgba(200,235,255,.95) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 82% 16%, rgba(235,210,255,.95) 0 1.6px, transparent 2.6px),
+    radial-gradient(circle at 88% 44%, rgba(190,215,255,.95) 0 1.4px, transparent 2.4px),
+    radial-gradient(circle at 10% 70%, rgba(215,225,255,.9)  0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 28% 78%, rgba(235,205,255,.95) 0 1.6px, transparent 2.6px),
+    radial-gradient(circle at 60% 72%, rgba(195,215,255,.95) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 78% 82%, rgba(225,205,255,.95) 0 1.8px, transparent 2.8px);
+  animation:twinkleA 14s ease-in-out infinite alternate;
+}
+@keyframes twinkleA{
+  0%{opacity:.35; filter:blur(0)} 50%{opacity:.75} 100%{opacity:1; filter:blur(.25px)}
 }
 
-/* 气泡按钮 */
+/* 第二层星点：错峰闪烁 */
+.fx::after{
+  opacity:.7;
+  background:
+    radial-gradient(circle at 18% 26%, rgba(220,230,255,.9) 0 1.4px, transparent 2.4px),
+    radial-gradient(circle at 34% 8%,  rgba(235,210,255,.95) 0 1.6px, transparent 2.6px),
+    radial-gradient(circle at 48% 30%, rgba(190,215,255,.9) 0 1.4px, transparent 2.4px),
+    radial-gradient(circle at 66% 18%, rgba(225,200,255,.95) 0 1.6px, transparent 2.6px),
+    radial-gradient(circle at 82% 28%, rgba(200,235,255,.9) 0 1.4px, transparent 2.4px),
+    radial-gradient(circle at 74% 74%, rgba(215,225,255,.95) 0 1.6px, transparent 2.6px),
+    radial-gradient(circle at 14% 82%, rgba(235,205,255,.9) 0 1.4px, transparent 2.4px);
+  animation:twinkleB 18s ease-in-out infinite alternate;
+}
+@keyframes twinkleB{ 0%{opacity:.25} 40%{opacity:.8} 100%{opacity:.95} }
+
+/* 远处云气漂移（独立层） */
+.nebula{position:fixed; inset:0; pointer-events:none; z-index:0}
+.nebula::before, .nebula::after{content:""; position:absolute; inset:0; pointer-events:none}
+.nebula::before{
+  background:
+    radial-gradient(700px 340px at 18% 12%, rgba(120,160,255,.10), transparent 65%),
+    radial-gradient(820px 360px at 82% 16%, rgba(170,140,255,.10), transparent 70%);
+  animation:drift1 36s ease-in-out infinite alternate;
+}
+.nebula::after{
+  background:
+    radial-gradient(540px 280px at 12% 68%, rgba(140,120,255,.07), transparent 70%),
+    radial-gradient(620px 300px at 88% 72%, rgba(120,160,255,.06), transparent 75%);
+  animation:drift2 48s ease-in-out infinite alternate;
+}
+@keyframes drift1{ from{transform:translateY(0)} to{transform:translateY(-18px)} }
+@keyframes drift2{ from{transform:translateY(8px)} to{transform:translateY(-10px)} }
+
+/* ===== 页面结构样式 ===== */
+.wrap{position:relative; z-index:1; max-width:1100px; margin:auto; padding:32px 20px 64px}
+header{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:22px}
+h1{margin:0; font-weight:750; font-size:clamp(22px,3vw,30px)}
+.nav{display:flex; gap:10px}
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; padding:10px 14px;
+  border-radius:14px; color:var(--ink); text-decoration:none; font-weight:600;
+  background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+  border:1px solid var(--stroke); backdrop-filter:blur(10px);
+  box-shadow:0 8px 22px rgba(0,0,0,.28), inset 0 -8px 18px rgba(0,0,0,.25);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.btn:hover{transform:translateY(-2px); box-shadow:0 16px 34px rgba(0,0,0,.36), 0 0 0 8px rgba(140,160,255,.10)}
+.muted{color:var(--muted); font-size:14px; margin:6px 2px 16px}
+
+/* 宫格 */
+.grid{display:grid; gap:18px; grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (min-width:760px){ .grid{grid-template-columns:repeat(3,1fr)} }
+@media (min-width:1100px){ .grid{grid-template-columns:repeat(6,1fr)} }
+
+/* 玻璃金属按钮卡 */
 .bubble{
-  position:relative; display:block;
-  height:210px; padding:24px 28px;
-  border-radius:28px; border:6px solid rgba(255,255,255,.85);
-  background:linear-gradient(180deg,#1ea0d8 0%, #2238c9 100%);
-  color:#fff; text-decoration:none; overflow:hidden;
-  box-shadow:0 18px 40px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.1);
-  transition:transform .15s ease, box-shadow .2s ease, filter .2s ease;
+  position:relative; overflow:hidden; text-decoration:none; color:var(--ink);
+  border-radius:24px; padding:18px 16px 16px; height:130px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;
+  background:
+    radial-gradient(120% 160% at 50% -30%, rgba(255,255,255,.16), transparent 55%),
+    linear-gradient(180deg, #333f73, #242e58 58%, #1a2146);
+  border:1px solid transparent;
+  box-shadow:0 14px 36px rgba(0,0,0,.35), inset 0 -12px 22px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.10);
+  transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
 }
-.bubble.row1{ height:240px; }
-.bubble.row2{ height:220px; margin-top:20px; }
-
+.bubble::before{
+  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; padding:1px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.06)) border-box,
+    linear-gradient(135deg, rgba(160,200,255,.55), rgba(180,150,255,.38) 40%, rgba(80,120,255,.35)) padding-box;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  border-radius:inherit;
+}
 .bubble::after{
-  content:''; position:absolute; left:64px; bottom:-22px;
-  border:18px solid transparent; border-top-color:rgba(255,255,255,.85);
-  filter:drop-shadow(0 8px 8px rgba(0,0,0,.25));
+  content:""; position:absolute; inset:1px 1px auto 1px; height:38%;
+  border-radius:22px 22px 14px 14px / 22px 22px 14px 14px;
+  background:linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0));
+  filter:blur(.2px); opacity:.9; pointer-events:none;
+}
+.bubble:hover{
+  transform:translateY(-4px);
+  box-shadow:0 22px 48px rgba(0,0,0,.42), 0 0 0 10px rgba(140,160,255,.10), inset 0 -14px 26px rgba(0,0,0,.42);
+  background:
+    radial-gradient(120% 160% at 50% -30%, rgba(255,255,255,.18), transparent 55%),
+    linear-gradient(180deg, #3a477f, #2a3465 58%, #1f274f);
 }
 
-/* 文案 */
-.bubble-title{ font-size:28px; font-weight:800; letter-spacing:1px; }
-.bubble-index{ position:absolute; right:22px; bottom:18px; font-weight:900; font-size:36px; opacity:.35; }
-
-.bubble:hover{ transform:translateY(-4px); filter:saturate(1.08);
-  box-shadow:0 24px 50px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.12);
+/* 圆形图标托盘 + 悬浮旋转放大 */
+.cap{
+  width:72px; height:72px; border-radius:999px; position:relative; display:grid; place-items:center;
+  background:
+    radial-gradient(120% 160% at 30% 10%, rgba(255,255,255,.22), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,.08)),
+    linear-gradient(180deg, #3d4980, #2b3463 60%, #202852);
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:0 10px 28px rgba(0,0,0,.36), inset 0 0 0 1px rgba(255,255,255,.12), inset 0 -12px 20px rgba(0,0,0,.38);
+  transition:transform .45s cubic-bezier(.2,.7,.2,1.1);
 }
+.bubble:hover .cap{ transform:scale(1.08) rotate(10deg) }
 
-/* 登录页小样式 */
-.tabs{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:10px 0 12px; }
-.tab{ background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:10px 12px; cursor:pointer; }
-.tab.active{ background:rgba(56,189,248,.15); border-color:rgba(56,189,248,.45); }
-.form{ display:grid; gap:12px; margin-top:8px; }
-.muted{ color:rgba(255,255,255,.6); font-size:12px; }
+.b-title{font-weight:800; font-size:15px; letter-spacing:.5px; text-align:center}
+svg{width:32px; height:32px; display:block}
+
+/* 登录区卡片 */
+.cols{display:grid; gap:18px; margin-top:18px}
+@media (min-width:860px){ .cols{grid-template-columns:1fr 1fr} }
+.card{
+  position:relative; border-radius:22px; padding:18px;
+  background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+  border:1px solid var(--stroke); backdrop-filter:blur(10px);
+  box-shadow:0 12px 34px rgba(0,0,0,.32), inset 0 -1px 0 rgba(255,255,255,.12);
+}
+.chip{display:inline-block; padding:4px 10px; border-radius:999px; font-size:12px; color:var(--ink);
+  background:linear-gradient(180deg, rgba(122,167,255,.18), rgba(166,136,255,.14)); border:1px solid var(--stroke); margin-bottom:8px}
+.col-title{font-size:18px; font-weight:800; margin:0 0 8px}
+.field{display:flex; gap:10px; align-items:center}
+.input{
+  flex:1 1 auto; padding:12px; border-radius:12px; border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06); color:var(--ink); outline:none;
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.input:focus{border-color:rgba(130,160,255,.7); box-shadow:0 0 0 6px rgba(130,160,255,.15)}
+
+/* 两行按钮（进入 / 工作台·总览） */
+.btn.btn-2l{ flex-direction:column; line-height:1.1; text-align:center; white-space:normal; }
+.btn.btn-2l span{ display:block; }
+.btn.btn-2l span:first-child{ font-weight:700; letter-spacing:.5px; }
+.btn.btn-2l span:last-child{ opacity:.95; }
+
+footer{margin-top:28px; text-align:center; color:var(--muted); font-size:13px}
